@@ -1,0 +1,39 @@
+﻿@model DarkoMVCApp.Models.ContactDto
+
+@{
+    ViewBag.Title = Resources.PG_UpdatePage;
+    int id = Model.Id;
+}
+
+<h2>@Resources.HDR_EditExistingContact @id</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <hr />
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+
+        @Html.Partial("_Contacts", Model)
+
+        @using (Html.BeginForm("Update", "Contacts", FormMethod.Post, new { @class = "form-group", dto = Model }))
+        {
+            @Html.Partial("_BtnSave")
+        }
+    </div>
+}
+<br />
+<br />
+<br />
+
+<div>
+    @Html.ActionLink(Resources.HDR_BackToList, "Index")
+</div>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>

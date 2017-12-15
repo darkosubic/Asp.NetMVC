@@ -1,0 +1,99 @@
+﻿@model DarkoMVCApp.ViewModels.ContactListViewModel
+@using PagedList.Mvc;
+@using DarkoMVCApp.Helpers;
+
+@{
+    ViewBag.Title = Resources.PG_ContactList;
+}
+
+<br>
+
+<p>
+    @Html.ActionLink(Resources.HDR_CreateNewContact, "Insert")
+</p>
+
+@using (Html.BeginForm())
+{
+    <p>
+        <div class="col-md-offset-3 col-md-10">
+            @Resources.LBL_FindByFirstNameOrLastName @Html.TextBox("searchQuery")
+            <input type="submit" value="@Resources.BTN_Search" class="btn btn-primary" />
+        </div>
+        @{
+            if (ViewBag.ResultsFound != null)
+            {
+                    <p class="col-md-offset-3 col-md-10">Broj pronađenih rezultata : @ViewBag.ResultsFound </p>
+                
+            }
+        }
+    </p>
+}
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.ActionLink(Resources.HDR_Id, "Index", new { idSortOrder = Sorting.UpgradeSortOrder(Model.Sort.IdSortOrder), firstNameSortOrder = Model.Sort.FirstNameOrder, lastNameSortOrder = Model.Sort.LastNameOrder, mailSortOrder = Model.Sort.MailOrder, telephoneSortOrder = Model.Sort.TelephoneOrder, dateCreatedSortOrder = Model.Sort.CreatedDateOrder, searchQuery = ViewBag.SearchQuery })
+        </th>
+        <th>
+            @Html.ActionLink(Resources.HDR_FIrstName, "Index", new { idSortOrder = Model.Sort.IdSortOrder, firstNameSortOrder = Sorting.UpgradeSortOrder(Model.Sort.FirstNameOrder), lastNameSortOrder = Model.Sort.LastNameOrder, mailSortOrder = Model.Sort.MailOrder, telephoneSortOrder = Model.Sort.TelephoneOrder, dateCreatedSortOrder = Model.Sort.CreatedDateOrder, searchQuery = ViewBag.SearchQuery })
+        </th>
+        <th>
+            @Html.ActionLink(Resources.HDR_LastName, "Index", new { idSortOrder = Model.Sort.IdSortOrder, firstNameSortOrder = Model.Sort.FirstNameOrder, lastNameSortOrder = Sorting.UpgradeSortOrder(Model.Sort.LastNameOrder), mailSortOrder = Model.Sort.MailOrder, telephoneSortOrder = Model.Sort.TelephoneOrder, dateCreatedSortOrder = Model.Sort.CreatedDateOrder, searchQuery = ViewBag.SearchQuery })
+        </th>
+        <th>
+            @Html.ActionLink(Resources.HDR_Mail, "Index", new { idSortOrder = Model.Sort.IdSortOrder, firstNameSortOrder = Model.Sort.FirstNameOrder, lastNameSortOrder = Model.Sort.LastNameOrder, mailSortOrder = Sorting.UpgradeSortOrder(Model.Sort.MailOrder), telephoneSortOrder = Model.Sort.TelephoneOrder, dateCreatedSortOrder = Model.Sort.CreatedDateOrder, searchQuery = ViewBag.SearchQuery })
+        </th>
+        <th>
+            @Html.ActionLink(Resources.HDR_Telephone, "Index", new { idSortOrder = Model.Sort.IdSortOrder, firstNameSortOrder = Model.Sort.FirstNameOrder, lastNameSortOrder = Model.Sort.LastNameOrder, mailSortOrder = Model.Sort.MailOrder, telephoneSortOrder = Sorting.UpgradeSortOrder(Model.Sort.TelephoneOrder), dateCreatedSortOrder = Model.Sort.CreatedDateOrder, searchQuery = ViewBag.SearchQuery })
+        </th>
+        <th>
+            @Html.ActionLink(Resources.HDR_DateCreated, "Index", new { idSortOrder = Model.Sort.IdSortOrder, firstNameSortOrder = Model.Sort.FirstNameOrder, lastNameSortOrder = Model.Sort.LastNameOrder, mailSortOrder = Model.Sort.MailOrder, telephoneSortOrder = Model.Sort.TelephoneOrder, dateCreatedSortOrder = Sorting.UpgradeSortOrder(Model.Sort.CreatedDateOrder), searchQuery = ViewBag.SearchQuery })
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.Contacts)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Mail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Telephone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateCreated)
+            </td>
+            <td>
+                @Html.ActionLink(Resources.BTN_Update, "Update", new { id = item.Id }) |
+                @Html.ActionLink(Resources.BTN_Delete, "Delete", new { id = item.Id },
+                    new { onclick = "return confirm('Are you sure you wish to delete this contact?');" })
+            </td>
+        </tr>
+    }
+
+</table>
+
+Page @(Model.Contacts.PageCount < Model.Contacts.PageNumber ? 0 : Model.Contacts.PageNumber) of @Model.Contacts.PageCount
+
+@Html.PagedListPager(Model.Contacts, page => Url.Action("Index",
+    new
+    {
+        page,
+        idSortOrder = Model.Sort.IdSortOrder,
+        firstNameSortOrder = Model.Sort.FirstNameOrder,
+        lastNameSortOrder = Model.Sort.LastNameOrder,
+        telephoneSortOrder = Model.Sort.TelephoneOrder,
+        mailSortOrder = Model.Sort.MailOrder,
+        dateCreatedSortOrder = Model.Sort.CreatedDateOrder,
+        searchQuery = ViewBag.SearchQuery
+    }))
